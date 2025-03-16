@@ -32,6 +32,10 @@ class MainActivity : AppCompatActivity() {
 
         // Xóa một ký tự cuối cùng (Backspace)
         findViewById<Button>(R.id.button_bs).setOnClickListener {
+            if (isNewCalculation) {
+                return@setOnClickListener
+            }
+
             if (expression.isNotEmpty()) {
                 expression.deleteCharAt(expression.length - 1)
                 resultTv.text = if (expression.isNotEmpty()) expression.toString() else "0"
@@ -40,6 +44,14 @@ class MainActivity : AppCompatActivity() {
 
         // Xóa toàn bộ biểu thức (Clear Entry)
         findViewById<Button>(R.id.button_ce).setOnClickListener {
+            expression.clear()
+            resultTv.text = "0"
+            lastResult = null
+            isNewCalculation = false
+        }
+
+        // Xóa tất cả và đưa về trạng thái ban đầu (Clear - nút "C")
+        findViewById<Button>(R.id.button_c).setOnClickListener {
             expression.clear()
             resultTv.text = "0"
             lastResult = null
@@ -56,13 +68,10 @@ class MainActivity : AppCompatActivity() {
         val input = button.text.toString()
 
         if (isNewCalculation) {
-            // Nếu bấm số hoặc dấu toán tử sau khi tính toán xong, thì bắt đầu lại với kết quả cũ
             expression.clear()
             if (input.matches(Regex("[0-9]"))) {
-                // Nếu là số -> thay thế kết quả cũ bằng số mới
                 expression.append(input)
             } else {
-                // Nếu là toán tử -> dùng kết quả trước làm cơ sở
                 expression.append(lastResult ?: "0").append(input)
             }
             isNewCalculation = false
