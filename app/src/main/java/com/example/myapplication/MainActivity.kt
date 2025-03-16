@@ -83,7 +83,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun calculateResult() {
-        val expr = expression.toString().replace("x", "*")
+        val expr = expression.toString().replace("x", "*").replace(",", ".")
+
         if (expr.isNotEmpty()) {
             try {
                 val result = ExpressionBuilder(expr).build().evaluate()
